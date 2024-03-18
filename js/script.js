@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const playButton = document.getElementById('playButton');
     const gridContainer = document.getElementById('grid-container');
     const selectDifficulty = document.createElement('select');
+    let bombs = [];
 
     // Aggiungi le opzioni di difficoltà alla select
     selectDifficulty.innerHTML = `
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     playButton.addEventListener('click', function () {
         // Rimuovi le celle esistenti dal contenitore della griglia
         gridContainer.innerHTML = '';
+        bombs = [];
 
         // Ottieni la difficoltà selezionata dalla select
         const selectedDifficulty = parseInt(selectDifficulty.value);
@@ -53,16 +55,36 @@ document.addEventListener('DOMContentLoaded', function () {
             gridRows = 7;
         }
 
+        // Genera le bombe
+        while (bombs.length < 16) {
+            const bombIndex = Math.floor(Math.random() * gridSize) + 1;
+            if (!bombs.includes(bombIndex)) {
+                bombs.push(bombIndex);
+            }
+        }
+
         // Genera la griglia
         for (let i = 1; i <= gridSize; i++) {
             const cell = document.createElement('div');
-            cell.innerHTML = i;
+            cell.dataset.index = i;
+            cell.textContent = i; // Aggiungi il testo con l'indice della cella
             cell.classList.add('cell');
             gridContainer.appendChild(cell);
 
             cell.addEventListener('click', function () {
-                this.classList.add('clicked');
-                alert('Cella cliccata: ' + cell.innerHTML);
+                const clickedIndex = parseInt(cell.dataset.index);
+                if (bombs.includes(clickedIndex)) {
+                    // Bomba cliccata
+                    cell.classList.add('bomb');
+                    alert('Hai cliccato su una bomba! Game over.');
+                } else {
+                    // Cella non bomba cliccata
+                    cell.classList.add('clicked');
+                    const remainingCells = document.querySelectorAll('.cell:not(.clicked)');
+                    if (remainingCells.length === 16) {
+                        alert('Hai completato il gioco! Hai vinto!');
+                    }
+                }
             });
         }
 
@@ -70,9 +92,12 @@ document.addEventListener('DOMContentLoaded', function () {
         gridContainer.style.gridTemplateColumns = `repeat(${gridColumns}, 1fr)`;
         gridContainer.style.gridTemplateRows = `repeat(${gridRows}, 1fr)`;
 
-        playButton.disabled;
+        playButton.disabled = true;
     });
 
     // Aggiungi la select prima del bottone di generazione
     playButton.parentNode.insertBefore(selectDifficulty, playButton);
 });
+
+
+
