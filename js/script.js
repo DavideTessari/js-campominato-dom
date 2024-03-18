@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const gridContainer = document.getElementById('grid-container');
     const selectDifficulty = document.createElement('select');
     let bombs = [];
-    let userScore = 0; // Inizializza il punteggio dell'utente
+    // Inizializza il punteggio dell'utente
+    let userScore = 0;
 
     // Aggiungi le opzioni di difficoltà alla select
     selectDifficulty.innerHTML = `
@@ -36,7 +37,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // Rimuovi le celle esistenti dal contenitore della griglia
         gridContainer.innerHTML = '';
         bombs = [];
-        userScore = 0; // Resetta il punteggio dell'utente
+        // Resetta il punteggio dell'utente
+        userScore = 0;
 
         // Ottieni la difficoltà selezionata dalla select
         const selectedDifficulty = parseInt(selectDifficulty.value);
@@ -69,28 +71,33 @@ document.addEventListener('DOMContentLoaded', function () {
         for (let i = 1; i <= gridSize; i++) {
             const cell = document.createElement('div');
             cell.dataset.index = i;
-            cell.textContent = i; // Aggiungi il testo con l'indice della cella
+            // Aggiungi il testo con l'indice della cella
+            cell.innerHTML = i;
             cell.classList.add('cell');
             gridContainer.appendChild(cell);
 
-            cell.addEventListener('click', function () {
+            cell.addEventListener('click', function handleClick() {
                 const clickedIndex = parseInt(cell.dataset.index);
                 if (bombs.includes(clickedIndex)) {
                     // Bomba cliccata
-                    cell.classList.add('bomb', 'red'); // Aggiungi la classe "bomb" e "red"
+                     // Aggiungi la classe "bomb" e "red"
+                    cell.classList.add('bomb', 'red');
                     alert('Hai cliccato su una bomba! Game over. Il tuo punteggio è: ' + userScore);
-                    playButton.disabled = false; // Riattiva il pulsante di gioco
+                    // Riattiva il pulsante di gioco
+                    playButton.disabled = false;
+                    gridContainer.querySelectorAll('.cell').forEach(cell => {
+                        cell.removeEventListener('click', handleClick);
+                    });
                 } else {
                     // Cella non bomba cliccata
                     cell.classList.add('clicked');
-                    userScore++; // Incrementa il punteggio dell'utente
+                    // Incrementa il punteggio dell'utente
+                    userScore++;
                     const remainingCells = document.querySelectorAll('.cell:not(.clicked)');
                     if (remainingCells.length === 16) {
                         alert('Hai completato il gioco! Hai vinto! Il tuo punteggio è: ' + userScore);
                     }
                 }
-                // Disabilita la cella per evitare ulteriori clic dopo la fine del gioco
-                cell.removeEventListener('click', arguments.callee);
             });
         }
 
@@ -104,7 +111,3 @@ document.addEventListener('DOMContentLoaded', function () {
     // Aggiungi la select prima del bottone di generazione
     playButton.parentNode.insertBefore(selectDifficulty, playButton);
 });
-
-
-
-
