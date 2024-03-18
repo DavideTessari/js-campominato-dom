@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
         gridContainer.style.gridTemplateColumns = `repeat(${gridColumns}, 1fr)`;
         gridContainer.style.gridTemplateRows = `repeat(${gridRows}, 1fr)`;
 
-        playButton.disabled = true;
+        playButton.disabled;
     });
 
     // Aggiungi la select prima del bottone di generazione
